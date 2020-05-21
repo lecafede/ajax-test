@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="jquery-3.3.1.min.js"></script>
+</head>
+<body>
+    <h1>Деревня дураков</h1>
+    Имя: <input id="nameBox" type="text" size="20">
+    
+    <button id="readButton">Данные профиля</button>
+    <button id="allUsersButton">Все профили</button>
+    
+    <div id="info"></div>
+    <img id="photo"></img>
+
+    <hr/>
+
+    <div id="status"></div>
+
+    <script type="text/javascript">
+    
+        $(document).ready(() => {
+           console.log("hello browser") 
+   
+           $('#readButton').click(() => {
+               console.log('Read Button clicked')
+               const requestURL = 'users/' + $('#nameBox').val();
+               console.log("Делаем запрос " + requestURL)
+               $.ajax({
+                   url: requestURL,
+                   type: 'GET',
+                   dataType: 'json',
+                   success: (data) => {
+                       console.log('You received some data', data)
+                       if (data.name && data.photo) {
+                           $('#status').html('Успешно найдено ' + requestURL);
+                           $('#info').html('Меня зовут ' + data.name);
+                           $('#photo').attr('src', data.photo).attr('width','300px')
+                       } else {
+                           $('#status').html('Ничего не найдено ' + requestURL);
+                           $('#info').html('');
+                           $('#photo').attr('src', '').attr('width', '0px');
+                       }
+                   }
+               });
+           });
+   
+           $('#allUsersButton').click(() => {
+               console.log("clicked" + new Date());
+   
+               $.ajax({
+                   url: 'users/',
+                   type: 'GET',
+                   dataType: 'json',
+                   success: (data) => {
+                       console.log('ajax success', data);
+                       $('#status').html('Все профили: ' + data)
+                   }
+               });
+           });
+        });
+
+        
+       </script>
+</body>
+</html>
